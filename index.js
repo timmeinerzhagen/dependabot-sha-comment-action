@@ -22,8 +22,13 @@ async function run() {
         core.info(`This action can only act on the 'pull_request' trigger.`)
     }
 }
-  
-run()
+
+try {
+    run();
+} catch (error) {
+    core.setFailed(error.message);
+}
+
 
 
 
