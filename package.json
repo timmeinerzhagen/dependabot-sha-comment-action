@@ -1,23 +1,30 @@
 {
   "name": "dependabot-sha-comment-action",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Update the version comment next to a sha hash from a dependabot update.",
+  "main": "lib/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "format": "prettier --write **/*.ts"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/timmeinerzhagen/dependabot-sha-comment-action.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Tim Jonas Meinerzhagen",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/timmeinerzhagen/dependabot-sha-comment-action/issues"
   },
   "homepage": "https://github.com/timmeinerzhagen/dependabot-sha-comment-action#readme",
   "dependencies": {
-    "@actions/core": "^1.6.0"
+    "@actions/core": "^1.0.0",
+    "@actions/github": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.6",
+    "prettier": "^2.4.1",
+    "typescript": "^4.4.4"
   }
 }
