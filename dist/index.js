@@ -40,7 +40,6 @@ const github = __importStar(__nccwpck_require__(5438));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            core.info(JSON.stringify(github.context));
             if (github.context.eventName === 'pull_request') {
                 core.info(`This action is running on the 'pull_request' event!`);
                 const payload = github.context.payload;
@@ -56,8 +55,13 @@ function run() {
                 });
                 const d = diff.toString();
                 d.split('\n').forEach(line => {
-                    if (line.startsWith('+')) {
+                    if (line.startsWith('+') && line.includes('@')) {
                         core.info(line);
+                        const parts = line.split("@");
+                        const action = parts[0].split('uses:')[1].trim();
+                        const version = parts[1].trim();
+                        core.info(action);
+                        core.info(version);
                     }
                 });
             }

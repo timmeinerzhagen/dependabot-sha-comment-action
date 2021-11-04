@@ -3,7 +3,6 @@ import * as github from '@actions/github'
 
 async function run(): Promise<void> {
   try {
-    core.info(JSON.stringify(github.context))
     if (github.context.eventName === 'pull_request') {
       core.info(`This action is running on the 'pull_request' event!`)
       const payload = github.context.payload as any ;
@@ -20,8 +19,13 @@ async function run(): Promise<void> {
       });
       const d: string = diff.toString();
       d.split('\n').forEach(line => {
-        if (line.startsWith('+')) {
+        if (line.startsWith('+') && line.includes('@')) {
           core.info(line)
+          const parts = line.split("@")
+          const action = parts[0].split('uses:')[1].trim();
+          const version = parts[1].trim();
+          core.info(action)
+          core.info(version)
         }
       });
 
