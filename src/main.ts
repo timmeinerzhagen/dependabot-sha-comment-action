@@ -18,7 +18,7 @@ async function run(): Promise<void> {
           }
       });
       const d: string = diff.toString();
-      for(const line of d.split('\n') {
+      for(const line of d.split('\n')) {
         if (line.startsWith('+') && line.includes('@')) {
           core.info(line)
           const parts = line.split("@")
@@ -33,12 +33,13 @@ async function run(): Promise<void> {
           core.info(version)
 
           if(version.length == 40) {
-            const { data: info } = await octokit.rest.git.getTag({
+            core.info("Starting");
+            const response = await octokit.rest.git.getTag({
               owner: owner,
               repo: repo,
-              tag_sha: version,
+              tag_sha: version
             });
-            core.info(JSON.stringify(info));
+            core.info(JSON.stringify(response));
           } else {
             core.info("Action not pinned to a hash");
           }

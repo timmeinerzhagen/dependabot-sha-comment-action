@@ -54,7 +54,7 @@ function run() {
                     }
                 });
                 const d = diff.toString();
-                d.split('\n').forEach((line) => __awaiter(this, void 0, void 0, function* () {
+                for (const line of d.split('\n')) {
                     if (line.startsWith('+') && line.includes('@')) {
                         core.info(line);
                         const parts = line.split("@");
@@ -66,19 +66,21 @@ function run() {
                         core.info(repo);
                         core.info(version);
                         if (version.length == 40) {
-                            const { data: info } = yield octokit.rest.git.getTag({
+                            core.info("Starting");
+                            const response = yield octokit.rest.git.getTag({
                                 owner: owner,
                                 repo: repo,
-                                tag_sha: version,
+                                tag_sha: version
                             });
-                            core.info(JSON.stringify(info));
+                            core.info(JSON.stringify(response));
                         }
                         else {
                             core.info("Action not pinned to a hash");
                         }
                     }
                     ;
-                }));
+                }
+                ;
             }
             else {
                 core.info(`This action can only act on the 'pull_request' trigger.`);
