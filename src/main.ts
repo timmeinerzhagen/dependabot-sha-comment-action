@@ -70,7 +70,7 @@ async function run(): Promise<void> {
             await exec.exec('git ', ['config', '--global', 'user.name', 'GitHub Actions'], options); 
             await exec.exec('git ', ['config', '--global', 'user.email', 'github-actions[bot]@users.noreply.github.com'], options); 
             await exec.exec('git ', ['fetch'], options);
-            await exec.exec('git ', ['checkout', 'origin/' + branch], options);
+            await exec.exec('git ', ['checkout', '-b', 'origin/' + branch], options);
             await exec.exec('git ', ['add', '.'], options);
             await exec.exec('git ', ['commit', '-m', '\"Add Version Comment\"'], options);
             await exec.exec('git ', ['push'], options);
