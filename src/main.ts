@@ -10,7 +10,7 @@ async function run(): Promise<void> {
 
       const token = core.getInput('GITHUB_TOKEN');
       const octokit = github.getOctokit(token)
-      const { data: pullRequest } = await octokit.rest.pulls.get({
+      const response = await octokit.rest.pulls.get({
           owner: github.context.repo.owner,
           repo: github.context.repo.repo,
           pull_number: payload.pull_request.number,
@@ -18,7 +18,7 @@ async function run(): Promise<void> {
             format: 'diff'
           }
       });
-      core.info(JSON.stringify(pullRequest))
+      core.info(JSON.stringify(response))
 
     } else {
         core.info(`This action can only act on the 'pull_request' trigger.`)
