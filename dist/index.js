@@ -89,14 +89,14 @@ function run() {
                             const newfile = sp[0] + newline + sp[1];
                             core.info("Start File");
                             core.info(newfile);
-                            yield exec.exec('echo ', ['\"' + newfile + '\"', '>', path], options);
+                            yield exec.exec('echo', ['\"' + 'Hello World!' + '\"', '>', path], options);
                             yield exec.exec('git ', ['config', '--global', 'user.name', 'GitHub Actions'], options);
                             yield exec.exec('git ', ['config', '--global', 'user.email', 'github-actions[bot]@users.noreply.github.com'], options);
                             yield exec.exec('git ', ['add', '.'], options);
                             yield exec.exec('git ', ['commit', '-m', '\"Add Version Comment\"'], options);
                             yield exec.exec('git ', ['push'], options);
-                            core.info(output);
-                            core.info(error);
+                            // core.info(output)
+                            // core.info(error)
                         }
                         else {
                             core.info("Action not pinned to a hash");
