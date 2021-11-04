@@ -15,7 +15,7 @@ async function run(): Promise<void> {
           repo: github.context.repo.repo,
           pull_number: payload.pull_request.number,
           mediaType: {
-            format: 'diff'
+            format: 'patch'
           }
       });
       core.info(JSON.stringify(response))
