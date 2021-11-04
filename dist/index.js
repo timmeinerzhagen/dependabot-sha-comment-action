@@ -67,13 +67,19 @@ function run() {
                         core.info(version);
                         if (version.length == 40) {
                             core.info("Starting");
-                            const response = yield octokit.rest.git.getTag({
-                                owner: owner,
-                                repo: repo,
-                                tag_sha: version
-                            });
-                            core.info("Done");
-                            core.info(JSON.stringify(response));
+                            try {
+                                const response = yield octokit.rest.git.getTag({
+                                    owner: owner,
+                                    repo: repo,
+                                    tag_sha: version
+                                });
+                                core.info("Done");
+                                core.info(JSON.stringify(response));
+                            }
+                            catch (error) {
+                                if (error instanceof Error)
+                                    core.setFailed(error.message);
+                            }
                         }
                         else {
                             core.info("Action not pinned to a hash");
