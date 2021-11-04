@@ -35,10 +35,10 @@ async function run(): Promise<void> {
           if(version.length == 40) {
             core.info("Starting");
             try {
-              const response = await octokit.rest.git.getTag({
+              const response = await octokit.rest.git.getRef({
                 owner: owner,
                 repo: repo,
-                tag_sha: version
+                ref: version
               });
               core.info("Done");
               core.info(JSON.stringify(response));
