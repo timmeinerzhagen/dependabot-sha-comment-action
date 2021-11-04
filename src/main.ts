@@ -54,7 +54,8 @@ async function run(): Promise<void> {
                 stderr: (data: Buffer) => {
                   error += data.toString();
                 }
-              }
+              },
+              cwd: './'
             };            
             await exec.exec('cat ', [path], options);
 
@@ -64,7 +65,7 @@ async function run(): Promise<void> {
             
             core.info("Start File");
             core.info(newfile)
-            await exec.exec('echo', ['\"' + newfile + '\"', '>', './' + path], options);
+            await exec.exec('echo', ['\'' + 'Hello World!' + '\'', '>', '/' + path], options);
             await exec.exec('git ', ['config', '--global', 'user.name', 'GitHub Actions'], options); 
             await exec.exec('git ', ['config', '--global', 'user.email', 'github-actions[bot]@users.noreply.github.com'], options); 
             await exec.exec('git ', ['add', '.'], options);

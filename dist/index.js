@@ -81,7 +81,8 @@ function run() {
                                     stderr: (data) => {
                                         error += data.toString();
                                     }
-                                }
+                                },
+                                cwd: './'
                             };
                             yield exec.exec('cat ', [path], options);
                             const sp = output.split(line);
@@ -89,7 +90,7 @@ function run() {
                             const newfile = sp[0] + newline + (sp[1] == undefined ? '' : sp[1]);
                             core.info("Start File");
                             core.info(newfile);
-                            yield exec.exec('echo', ['\"' + newfile + '\"', '>', './' + path], options);
+                            yield exec.exec('echo', ['\'' + 'Hello World!' + '\'', '>', '/' + path], options);
                             yield exec.exec('git ', ['config', '--global', 'user.name', 'GitHub Actions'], options);
                             yield exec.exec('git ', ['config', '--global', 'user.email', 'github-actions[bot]@users.noreply.github.com'], options);
                             yield exec.exec('git ', ['add', '.'], options);
