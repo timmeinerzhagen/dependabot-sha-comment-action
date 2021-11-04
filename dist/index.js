@@ -95,7 +95,7 @@ function run() {
                             yield exec.exec('git ', ['config', '--global', 'user.name', 'GitHub Actions'], options);
                             yield exec.exec('git ', ['config', '--global', 'user.email', 'github-actions[bot]@users.noreply.github.com'], options);
                             yield exec.exec('git ', ['fetch'], options);
-                            yield exec.exec('git ', ['checkout', 'origin/' + branch], options);
+                            yield exec.exec('git ', ['checkout', '-b', 'origin/' + branch], options);
                             yield exec.exec('git ', ['add', '.'], options);
                             yield exec.exec('git ', ['commit', '-m', '\"Add Version Comment\"'], options);
                             yield exec.exec('git ', ['push'], options);
