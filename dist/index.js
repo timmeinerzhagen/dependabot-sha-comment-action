@@ -46,15 +46,20 @@ function run() {
                 const payload = github.context.payload;
                 const token = core.getInput('GITHUB_TOKEN');
                 const octokit = github.getOctokit(token);
-                const response = yield octokit.rest.pulls.get({
+                const { data: diff } = yield octokit.rest.pulls.get({
                     owner: github.context.repo.owner,
                     repo: github.context.repo.repo,
                     pull_number: payload.pull_request.number,
                     mediaType: {
-                        format: 'patch'
+                        format: 'diff'
                     }
                 });
-                core.info(JSON.stringify(response));
+                const d = diff.toString();
+                d.split('\n').forEach(line => {
+                    if (line.startsWith('+')) {
+                        core.info(line);
+                    }
+                });
             }
             else {
                 core.info(`This action can only act on the 'pull_request' trigger.`);
