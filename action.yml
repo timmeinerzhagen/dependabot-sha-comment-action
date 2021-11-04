@@ -2,4 +2,4 @@ name: 'Dependabot SHA Comment Action'
 description: 'Update the version comment next to a sha hash from a dependabot update.'
 runs:
   using: 'node12'
-  main: 'lib/main.js'
+  main: 'dist/index.js'
