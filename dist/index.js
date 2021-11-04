@@ -72,6 +72,7 @@ function run() {
                                 repo: repo,
                                 tag_sha: version
                             });
+                            core.info("Done");
                             core.info(JSON.stringify(response));
                         }
                         else {

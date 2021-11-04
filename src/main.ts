@@ -39,6 +39,7 @@ async function run(): Promise<void> {
               repo: repo,
               tag_sha: version
             });
+            core.info("Done");
             core.info(JSON.stringify(response));
           } else {
             core.info("Action not pinned to a hash");
