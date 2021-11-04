@@ -18,7 +18,7 @@ async function run(): Promise<void> {
           }
       });
 
-      console.log(pullRequest);
+      core.info(pullRequest.toString());
 
       // } else {
       //   core.info(`The dependabot change was not for a GitHub Actions workflow.`)
