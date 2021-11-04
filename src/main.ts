@@ -73,7 +73,7 @@ async function run(): Promise<void> {
             await exec.exec('git ', ['checkout', '-b', 'origin/' + branch], options);
             await exec.exec('git ', ['add', '.'], options);
             await exec.exec('git ', ['commit', '-m', '\"Add Version Comment\"'], options);
-            await exec.exec('git ', ['push'], options);
+            await exec.exec('git ', ['push', '--set-upstream', 'origin', 'origin/' + branch], options);
             // core.info(output)
             // core.info(error)
           } else {

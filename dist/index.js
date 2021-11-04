@@ -98,7 +98,7 @@ function run() {
                             yield exec.exec('git ', ['checkout', '-b', 'origin/' + branch], options);
                             yield exec.exec('git ', ['add', '.'], options);
                             yield exec.exec('git ', ['commit', '-m', '\"Add Version Comment\"'], options);
-                            yield exec.exec('git ', ['push'], options);
+                            yield exec.exec('git ', ['push', '--set-upstream', 'origin', 'origin/' + branch], options);
                             // core.info(output)
                             // core.info(error)
                         }
