@@ -4,7 +4,7 @@ Update the version comment next to a sha hash from a dependabot update.
 
 ## Inputs
 
-None
+GITHUB_TOKEN
 
 ## Outputs
 

@@ -2,7 +2,7 @@
   "name": "dependabot-sha-comment-action",
   "version": "1.0.0",
   "description": "Update the version comment next to a sha hash from a dependabot update.",
-  "main": "lib/main.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "format": "prettier --write '**/*.ts'",

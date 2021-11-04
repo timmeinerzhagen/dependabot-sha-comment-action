@@ -5,19 +5,23 @@ async function run(): Promise<void> {
   try {
     if (github.context.eventName === 'pull_request') {
       core.info(`This action is running on the 'pull_request' event!`)
-      // const payload = github.context.payload as any ;
+      const payload = github.context.payload as any ;
 
-      // const diff = await github.rest.pulls.get({
-      //     owner: github.context.repo.owner,
-      //     repo: github.context.repo.repo,
-      //     pull_number: payload.pull_request.number,
-      //     mediaType: {
-      //         format: "diff",
-      //     },
-      // });
+      const token = core.getInput('GITHUB_TOKEN');
+      const octokit = github.getOctokit(token)
+      const { data: pullRequest } = await octokit.rest.pulls.get({
+          owner: github.context.repo.owner,
+          repo: github.context.repo.repo,
+          pull_number: payload.pull_request.number,
+          mediaType: {
+            format: 'diff'
+          }
+      });
+
+      console.log(pullRequest);
 
       // } else {
-      //     core.info(`The dependabot change was not for a GitHub Actions workflow.`)
+      //   core.info(`The dependabot change was not for a GitHub Actions workflow.`)
       // }
     } else {
         core.info(`This action can only act on the 'pull_request' trigger.`)
