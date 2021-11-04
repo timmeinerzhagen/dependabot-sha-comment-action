@@ -1,6 +1,7 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 import * as exec from '@actions/exec'
+import { userInfo } from 'os';
 
 async function run(): Promise<void> {
   try {
@@ -62,10 +63,12 @@ async function run(): Promise<void> {
             const newfile = sp[0] + newline + sp[1];
             core.info(newfile)
             await exec.exec('printf ', [newfile, '>', path], options);
+            await exec.exec('git ', ['config', '--global', 'user.name', 'GitHub Actions'], options); 
+            await exec.exec('git ', ['config', '--global', 'user.email', 'github-actions[bot]@users.noreply.github.com'], options); 
             await exec.exec('git ', ['add', '.'], options);
             await exec.exec('git ', ['commit', '-m', '\"Add Version Comment\"'], options);
             await exec.exec('git ', ['push'], options);
-            
+          
             core.info(output)
             core.info(error)
           } else {
