@@ -9,6 +9,7 @@ async function run(): Promise<void> {
       core.info(`This action is running on the 'pull_request' event!`)
       const payload = github.context.payload as any;
 
+      const branch = payload.pull_request.head.ref; 
 
       const titleparts = payload.pull_request.title.split('to')
       const version_update = titleparts[titleparts.length - 1].trim()
@@ -70,7 +71,7 @@ async function run(): Promise<void> {
             await exec.exec('git ', ['config', '--global', 'user.email', 'github-actions[bot]@users.noreply.github.com'], options); 
             await exec.exec('git ', ['add', '.'], options);
             await exec.exec('git ', ['commit', '-m', '\"Add Version Comment\"'], options);
-            await exec.exec('git ', ['push'], options);
+            await exec.exec('git ', ['push', 'origin', 'HEAD:' + branch], options);
             // core.info(output)
             // core.info(error)
           } else {

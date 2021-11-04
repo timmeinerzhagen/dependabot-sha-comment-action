@@ -44,6 +44,7 @@ function run() {
             if (github.context.eventName === 'pull_request') {
                 core.info(`This action is running on the 'pull_request' event!`);
                 const payload = github.context.payload;
+                const branch = payload.pull_request.head.ref;
                 const titleparts = payload.pull_request.title.split('to');
                 const version_update = titleparts[titleparts.length - 1].trim();
                 const token = core.getInput('GITHUB_TOKEN');
@@ -95,7 +96,7 @@ function run() {
                             yield exec.exec('git ', ['config', '--global', 'user.email', 'github-actions[bot]@users.noreply.github.com'], options);
                             yield exec.exec('git ', ['add', '.'], options);
                             yield exec.exec('git ', ['commit', '-m', '\"Add Version Comment\"'], options);
-                            yield exec.exec('git ', ['push'], options);
+                            yield exec.exec('git ', ['push', 'origin', 'HEAD:' + branch], options);
                             // core.info(output)
                             // core.info(error)
                         }
