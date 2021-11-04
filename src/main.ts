@@ -65,13 +65,12 @@ async function run(): Promise<void> {
             
             core.info("Start File");
             // core.info(newfile)
-            await exec.exec('sed', ['-i', 's/' + line.substring(1) + '/' + newline +'/g', path], options);
+            await exec.exec('sed', ['-i', '"s/' + line.substring(1) + '/' + newline +'/g"', path], options);
             await exec.exec('git ', ['config', '--global', 'user.name', 'GitHub Actions'], options); 
             await exec.exec('git ', ['config', '--global', 'user.email', 'github-actions[bot]@users.noreply.github.com'], options); 
             await exec.exec('git ', ['add', '.'], options);
             await exec.exec('git ', ['commit', '-m', '\"Add Version Comment\"'], options);
             await exec.exec('git ', ['push'], options);
-          
             // core.info(output)
             // core.info(error)
           } else {
