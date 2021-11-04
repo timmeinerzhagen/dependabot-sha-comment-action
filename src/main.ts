@@ -69,9 +69,10 @@ async function run(): Promise<void> {
             await exec.exec('sed -i \"s/' + line.substring(1).trim().replace("/", "\\/") + '/' + newline.trim().replace("/", "\\/") + ' # 3.2.1/g\" ' + path);
             await exec.exec('git ', ['config', '--global', 'user.name', 'GitHub Actions'], options); 
             await exec.exec('git ', ['config', '--global', 'user.email', 'github-actions[bot]@users.noreply.github.com'], options); 
+            await exec.exec('git ', ['checkout', branch], options);
             await exec.exec('git ', ['add', '.'], options);
             await exec.exec('git ', ['commit', '-m', '\"Add Version Comment\"'], options);
-            await exec.exec('git ', ['push', 'origin', 'HEAD:' + branch], options);
+            await exec.exec('git ', ['push'], options);
             // core.info(output)
             // core.info(error)
           } else {
