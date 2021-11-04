@@ -20,15 +20,6 @@ async function run(): Promise<void> {
       });
       core.info(JSON.stringify(pullRequest))
 
-      // pullRequest.commits.forEach(commit => {
-      //   commit.files.forEach(file => {
-      //     if (file.filename.endsWith('.yml')) {
-      //       core.info(`Found a yml file: ${file.filename}`)
-      //     } else {
-      //       core.info(`Ignoring file: ${file.filename}`)
-      //     }
-      //   });
-      // });
     } else {
         core.info(`This action can only act on the 'pull_request' trigger.`)
     }
@@ -38,22 +29,3 @@ async function run(): Promise<void> {
 }
 
 run();
-
-
-
-// const message = core.getInput('message');
-// const github_token = core.getInput('GITHUB_TOKEN');
-
-// const context = github.context;
-// if (context.payload.issue == null) {
-//     core.setFailed('No issue found.');
-//     return;
-// }
-// const issue_number = context.payload.issue.number;
-
-// const octokit = new github.GitHub(github_token);
-// const new_comment = octokit.issues.createComment({
-//     ...context.repo,
-//     issue_number: issue_number,
-//     body: message
-//     });
