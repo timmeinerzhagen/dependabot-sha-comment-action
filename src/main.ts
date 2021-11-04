@@ -1,11 +1,16 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
+import * as exec from '@actions/exec'
 
 async function run(): Promise<void> {
   try {
     if (github.context.eventName === 'pull_request') {
       core.info(`This action is running on the 'pull_request' event!`)
-      const payload = github.context.payload as any ;
+      const payload = github.context.payload as any;
+
+
+      const titleparts = payload.pull_request.title.split('to')
+      const version_update = titleparts[titleparts.length - 1].trim()
 
       const token = core.getInput('GITHUB_TOKEN');
       const octokit = github.getOctokit(token)
@@ -18,6 +23,10 @@ async function run(): Promise<void> {
           }
       });
       const d: string = diff.toString();
+
+      const path = d.split('\n')[0].split(' ')[2].substr(2);
+      core.info(path)
+
       for(const line of d.split('\n')) {
         if (line.startsWith('+') && line.includes('@')) {
           core.info(line)
@@ -33,18 +42,32 @@ async function run(): Promise<void> {
           core.info(version)
 
           if(version.length == 40) {
-            core.info("Starting");
-            try {
-              const response = await octokit.rest.git.getRef({
-                owner: owner,
-                repo: repo,
-                ref: version
-              });
-              core.info("Done");
-              core.info(JSON.stringify(response));
-            } catch (error) {
-              if (error instanceof Error) core.setFailed(error.message)
-            }
+
+            let output = '';
+            let error = '';
+            const options = {
+              listeners: {
+                stdout: (data: Buffer) => {
+                  output += data.toString();
+                },
+                stderr: (data: Buffer) => {
+                  error += data.toString();
+                }
+              }
+            };            
+            await exec.exec('cat ', [path], options);
+
+            const sp = output.split(line);
+            const newline = line.split('#')[0] + ' # ' + version_update + '\n';
+            const newfile = sp[0] + newline + sp[1];
+            core.info(newfile)
+            await exec.exec('printf ', [newfile, '>', path], options);
+            await exec.exec('git ', ['add', '.'], options);
+            await exec.exec('git ', ['commit', '-m', '\"Add Version Comment\"'], options);
+            await exec.exec('git ', ['push'], options);
+            
+            core.info(output)
+            core.info(error)
           } else {
             core.info("Action not pinned to a hash");
           }
