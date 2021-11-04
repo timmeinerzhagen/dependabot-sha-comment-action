@@ -3,6 +3,7 @@ import * as github from '@actions/github'
 
 async function run(): Promise<void> {
   try {
+    core.info(JSON.stringify(github.context))
     if (github.context.eventName === 'pull_request') {
       core.info(`This action is running on the 'pull_request' event!`)
       const payload = github.context.payload as any ;
@@ -17,12 +18,17 @@ async function run(): Promise<void> {
             format: 'diff'
           }
       });
+      core.info(JSON.stringify(pullRequest))
 
-      core.info(pullRequest.toString());
-
-      // } else {
-      //   core.info(`The dependabot change was not for a GitHub Actions workflow.`)
-      // }
+      // pullRequest.commits.forEach(commit => {
+      //   commit.files.forEach(file => {
+      //     if (file.filename.endsWith('.yml')) {
+      //       core.info(`Found a yml file: ${file.filename}`)
+      //     } else {
+      //       core.info(`Ignoring file: ${file.filename}`)
+      //     }
+      //   });
+      // });
     } else {
         core.info(`This action can only act on the 'pull_request' trigger.`)
     }
