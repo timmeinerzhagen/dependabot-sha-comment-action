@@ -18,7 +18,7 @@ async function run(): Promise<void> {
           }
       });
       const d: string = diff.toString();
-      d.split('\n').forEach(async line => {
+      for(const line of d.split('\n') {
         if (line.startsWith('+') && line.includes('@')) {
           core.info(line)
           const parts = line.split("@")
@@ -43,7 +43,7 @@ async function run(): Promise<void> {
             core.info("Action not pinned to a hash");
           }
         };
-      });
+      };
     } else {
         core.info(`This action can only act on the 'pull_request' trigger.`)
     }
