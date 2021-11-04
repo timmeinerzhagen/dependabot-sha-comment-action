@@ -59,10 +59,10 @@ async function run(): Promise<void> {
             await exec.exec('cat ', [path], options);
 
             const sp = output.split(line);
-            const newline = line.split('#')[0] + ' # ' + version_update + '\n';
+            const newline = line.substring(1).split('#')[0] + ' # ' + version_update + '\n';
             const newfile = sp[0] + newline + sp[1];
             core.info(newfile)
-            await exec.exec('printf ', ['\"' + newfile + '\"', '>', path], options);
+            await exec.exec('echo ', ['\"' + newfile + '\"', '>', path], options);
             await exec.exec('git ', ['config', '--global', 'user.name', 'GitHub Actions'], options); 
             await exec.exec('git ', ['config', '--global', 'user.email', 'github-actions[bot]@users.noreply.github.com'], options); 
             await exec.exec('git ', ['add', '.'], options);
