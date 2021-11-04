@@ -90,7 +90,7 @@ function run() {
                             const newfile = sp[0] + newline + (sp[1] == undefined ? '' : sp[1]);
                             core.info("Start File");
                             // core.info(newfile)
-                            yield exec.exec('sed', ['-i', "s/" + line.substring(1).trim() + '/' + line.substring(1).trim() + " # 3.2.1/g", path], options);
+                            yield exec.exec('sed -i "s/' + line.substring(1).trim() + '/' + line.substring(1).trim() + ' # 3.2.1/g" ' + path);
                             yield exec.exec('git ', ['config', '--global', 'user.name', 'GitHub Actions'], options);
                             yield exec.exec('git ', ['config', '--global', 'user.email', 'github-actions[bot]@users.noreply.github.com'], options);
                             yield exec.exec('git ', ['add', '.'], options);
