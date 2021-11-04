@@ -64,8 +64,8 @@ async function run(): Promise<void> {
             const newfile = sp[0] + newline + (sp[1] == undefined ? '' : sp[1]);
             
             core.info("Start File");
-            core.info(newfile)
-            await exec.exec('printf', ['\'' + 'Hello World!' + '\'', '>', '/' + path], options);
+            // core.info(newfile)
+            await exec.exec('sed', ['-i', 's/' + escape(line.substring(1)) + '/' + escape(newline) +'/g', path], options);
             await exec.exec('git ', ['config', '--global', 'user.name', 'GitHub Actions'], options); 
             await exec.exec('git ', ['config', '--global', 'user.email', 'github-actions[bot]@users.noreply.github.com'], options); 
             await exec.exec('git ', ['add', '.'], options);
