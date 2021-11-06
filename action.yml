@@ -1,9 +1,13 @@
 name: 'Dependabot SHA Comment Action'
 description: 'Update the version comment next to a sha hash from a dependabot update.'
+author: timmeinerzhagen
 inputs: 
   GITHUB_TOKEN:
-    description: 'Github token of the repository'
+    description: 'Github token of the repository with scopes repos and workflows'
     required: true
+branding:
+  icon: 'lock'  
+  color: 'yellow'
 
 runs:
   using: "composite"
