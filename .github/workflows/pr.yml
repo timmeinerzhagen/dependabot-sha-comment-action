@@ -1,0 +1,93 @@
+on:
+  pull_request:
+
+jobs:
+  pr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Check whether Pull Request
+        uses: actions/github-script@v5
+        with:
+          script: |
+            if (context.eventName !== 'pull_request') {
+              core.setFailed("This action can only be used with the 'pull_request' trigger.");
+            }
+
+      - name: Load Pull Request Diff
+        uses: actions/github-script@v5
+        id: diff
+        with:
+          script: |
+            const diff = github.rest.pulls.get({
+              owner: github.context.repo.owner,
+              repo: github.context.repo.repo,
+              pull_number: payload.pull_request.number,
+              mediaType: {
+                format: 'diff'
+              }
+            });
+
+            return diff.data;
+
+      - name: Add Comment to Dependency SHA
+        uses: actions/github-script@v5
+        id: vars
+        env:
+          DIFF: ${{ steps.diff.outputs.diff }}
+        with:
+          script: |
+            const {DIFF} = process.env;
+            const payload = context.payload;
+
+            const titleparts = payload.pull_request.title.split('to')
+            const version_update = titleparts[titleparts.length - 1].trim();
+
+            const path = DIFF.split('\n')[0].split(' ')[2].substr(2);
+            core.info(path);
+
+
+            for(const line of d.split('\n')) {
+              if (line.startsWith('+') && line.includes('@')) {
+                const parts = line.split("@")
+                const action = parts[0].split('uses:')[1].trim();
+
+                const owner = action.split('/')[0]
+                const repo = action.split('/')[1]
+                const version = parts[1].trim();
+
+                if(version.length == 40) {
+                  let output = '';
+                  let error = '';
+                  const options = {
+                    listeners: {
+                      stdout: (data: Buffer) => {
+                        output += data.toString();
+                      },
+                      stderr: (data: Buffer) => {
+                        error += data.toString();
+                      }
+                    },
+                    cwd: './'
+                  };            
+                  await exec.exec('cat ', [path], options);
+
+                  const sp = output.split(line.substring(1));
+                  const newline = line.substring(1).split('#')[0] + ' # ' + version_update + '\n';
+                  const newfile = sp[0] + newline + (sp[1] == undefined ? '' : sp[1]);
+                  
+                  core.info(newline);
+                  await exec.exec('sed -i \"s/' + line.substring(1).trim().replace("/", "\\/") + '/' + newline.trim().replace("/", "\\/") + '/g\" ' + path);
+                }
+              }
+            }
+
+      - name: Push file changes
+        shell: bash
+        run: |
+          git config --global user.name GitHub Actions
+          git config --global user.email github-actions[bot]@users.noreply.github.com
+          git add .
+          git commit -m "Add Version Comment"
+          git push 

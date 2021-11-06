@@ -1,0 +1,106 @@
+name: 'Dependabot SHA Comment Action'
+description: 'Update the version comment next to a sha hash from a dependabot update.'
+inputs: 
+  GITHUB_TOKEN:
+    description: 'Github token of the repository'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v2
+      with:
+        repository: ${{ github.repository }}
+        ref: ${{ github.event.pull_request.head.ref }}
+        token: ${{ inputs.GITHUB_TOKEN }}
+
+    - name: Check Pull Request Meta
+      uses: actions/github-script@v5
+      id: check
+      with:
+        script: |
+          ## Check if correct event ##
+          if (context.eventName !== 'pull_request_target') {
+            core.setFailed("This action can only be used with the 'pull_request_target' trigger.");
+          } else {
+            ## Check if PR opened by Dependabot ##
+            if (context.payload.sender.login == 'dependabot[bot]') {
+              core.info("Processing the Pull Request...")
+              return true;
+            } else {
+              core.info("Not a dependabot Pull Request.");
+            }
+          }
+
+    - name: Get Pull Request Diff
+      shell: bash
+      id: diff
+      if: steps.check.outputs.result
+      run: |
+        ## Prepare Branches ##
+        git checkout $HEAD
+        git branch --set-upstream-to=origin/$HEAD $HEAD
+        git pull --all
+
+        ## Get Diff; add to ENV ##
+        DIFF=$(git diff origin/$BASE $HEAD | awk 1 ORS='\\n')
+        echo 'DIFF<<EOF' >> $GITHUB_ENV
+        echo $DIFF >> $GITHUB_ENV
+        echo 'EOF' >> $GITHUB_ENV
+      env:
+        BASE: ${{ github.event.pull_request.base.ref }}
+        HEAD: ${{ github.event.pull_request.head.ref }}
+
+    - name: Add Comment to Dependency SHA
+      uses: actions/github-script@v5
+      if: steps.check.outputs.result
+      with:
+        script: |
+          const {DIFF} = process.env;
+          const payload = context.payload;
+
+          const titleparts = payload.pull_request.title.split('to')
+          const version_update = titleparts[titleparts.length - 1].trim();
+          const path = DIFF.split('\n')[0].split(' ')[2].substr(2);
+
+          // Look through DIFF for version change //
+          for(const line of DIFF.split('\\n')) {
+            if (line.startsWith('+') && line.includes('@')) {
+              const parts = line.split("@")
+              const action = parts[0].split('uses:')[1].trim();
+
+              const owner = action.split('/')[0]
+              const repo = action.split('/')[1]
+              const version = parts[1].split('#')[0].trim();
+
+              // If version is SHA, then add comment //
+              if(version.length == 40) {
+                let output = '', error = '';
+                const options = {
+                  listeners: { 
+                    stdout: (data) => { output += data.toString(); },
+                    stderr: (data) => { error += data.toString(); }
+                  },
+                  cwd: './'
+                };
+
+                // Calculate changes //
+                await exec.exec('cat ', [path], options);
+                const sp = output.split(line.substring(1));
+                const newline = line.substring(1).split('#')[0].trim() + ' # ' + version_update + '\n';
+
+                // Save changes in file //
+                await exec.exec('sed -i \"s/' + line.substring(1).trim().replace("/", "\\/") + '/' + newline.trim().replace("/", "\\/") + '/g\" ' + path);
+              }
+            }
+          }
+
+    - name: Push file changes
+      shell: bash
+      if: steps.check.outputs.result
+      run: |
+        git config --global user.name GitHub Actions
+        git config --global user.email github-actions[bot]@users.noreply.github.com
+        git add .
+        git commit -m "Add Version Comment"
+        git push 

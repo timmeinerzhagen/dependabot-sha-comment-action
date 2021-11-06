@@ -1,0 +1,43 @@
+{
+  "name": "dependabot-sha-comment-action",
+  "version": "1.0.0",
+  "description": "Update the version comment next to a sha hash from a dependabot update.",
+  "main": "lib/main.js",
+  "scripts": {
+    "build": "tsc",
+    "format": "prettier --write '**/*.ts'",
+    "format-check": "prettier --check '**/*.ts'",
+    "lint": "eslint src/**/*.ts",
+    "package": "ncc build --source-map --license licenses.txt",
+    "test": "jest",
+    "all": "npm run build && npm run format && npm run lint && npm run package && npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/timmeinerzhagen/dependabot-sha-comment-action.git"
+  },
+  "keywords": [],
+  "author": "Tim Jonas Meinerzhagen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/timmeinerzhagen/dependabot-sha-comment-action/issues"
+  },
+  "homepage": "https://github.com/timmeinerzhagen/dependabot-sha-comment-action#readme",
+  "dependencies": {
+    "@actions/core": "^1.6.0",
+    "@actions/exec": "^1.1.0",
+    "@actions/github": "^5.0.0",
+    "@actions/io": "^1.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^16.10.5",
+    "@typescript-eslint/parser": "^5.0.0",
+    "@vercel/ncc": "^0.31.1",
+    "eslint": "^7.32.0",
+    "jest": "^27.2.5",
+    "js-yaml": "^4.1.0",
+    "prettier": "2.4.1",
+    "ts-jest": "^27.0.5",
+    "typescript": "^4.4.4"
+  }
+}
