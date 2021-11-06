@@ -9,12 +9,7 @@ module.exports = async ({process, context, exec}) => {
     // Look through DIFF for version change //
     for(const line of DIFF.split('\\n')) {
         if (line.startsWith('+') && line.includes('@')) {
-            const parts = line.split("@")
-            const action = parts[0].split('uses:')[1].trim();
-
-            const owner = action.split('/')[0]
-            const repo = action.split('/')[1]
-            const version = parts[1].split('#')[0].trim();
+            const version = split("@")[1].split('#')[0].trim();
 
             // If version is SHA, then add comment //
             if(version.length == 40) {
@@ -29,7 +24,6 @@ module.exports = async ({process, context, exec}) => {
 
             // Calculate changes //
             await exec.exec('cat ', [path], options);
-            const sp = output.split(line.substring(1));
             const newline = line.substring(1).split('#')[0].trim() + ' # ' + version_update + '\n';
 
             // Save changes in file //
