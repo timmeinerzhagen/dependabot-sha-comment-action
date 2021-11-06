@@ -95,7 +95,7 @@ runs:
                       const newline = line.substring(1).split('#')[0].trim() + ' # ' + version_update + '\n';
 
                       // Save changes in file //
-                      await exec.exec('sed -i \"s/' + line.substring(1).trim().replaceAll("/", "\\/") + '/' + newline.trim().replaceAll("/", "\\/") + '/g\" ' + path);
+                      await exec.exec('sed -i \"s/' + line.substring(1).trim().replace("/\//g", "\\/") + '/' + newline.trim().replace("/\//g", "\\/") + '/g\" ' + path);
                   }
               }
           }
