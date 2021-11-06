@@ -1,6 +1,6 @@
 # Dependabot SHA Comment Action
 
-Used with Dependabot and GitHub Actions pinned via SHA. It adds and maintains a version comment next to the SHA hash on every dependabot update. 
+Used with Dependabot and GitHub Actions pinned via SHA. It adds and maintains a version comment next to the SHA hash on every Dependabot update. 
 
 This makes the actions much more readable than having a plain SHA.
 
@@ -45,7 +45,8 @@ In order to run this action you also need to provide a PAT. This is needed becau
 
 A GitHub Personal Access Token (PAT) is required. 
 
-This PAT needs the access scopes `repo` and `workflows` to push changes to GitHub Actions workflows. See [Security Disclaimer](#Security-Disclaimer).
+This PAT needs the access scopes `repo` and `workflows` to push changes to GitHub Actions workflows. 
+See the [Security Disclaimer](#Security-Disclaimer).
 
 ## Outputs
 

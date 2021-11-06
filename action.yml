@@ -1,5 +1,5 @@
 name: 'Dependabot SHA Comment Action'
-description: 'Update the version comment next to a sha hash from a dependabot update.'
+description: 'Update version comment for SHA pin of GitHub Actions on Dependabot update.'
 author: timmeinerzhagen
 inputs: 
   GITHUB_TOKEN:
@@ -32,7 +32,7 @@ runs:
               core.info("Processing the Pull Request...")
               return true;
             } else {
-              core.info("Not a dependabot Pull Request.");
+              core.info("Not a Dependabot Pull Request.");
             }
           }
 
