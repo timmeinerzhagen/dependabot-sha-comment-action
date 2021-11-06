@@ -64,11 +64,9 @@ runs:
           const {DIFF} = process.env;
           const payload = context.payload;
 
-          core.info("Version");
           const titleparts = payload.pull_request.title.split('to')
           const version_update = titleparts[titleparts.length - 1].trim();
 
-          core.info("Path");
           // Check if GitHub Actions file is changes //
           const path = DIFF.split('\n')[0].split(' ')[2].substr(2);
           if (!(path.startsWith('.github/workflows') && (path.endsWith('.yml') || path.endsWith('.yaml')))) {
@@ -76,11 +74,10 @@ runs:
               return;
           }
 
-          core.info("DIFF");
           // Look through DIFF for version change //
           for(const line of DIFF.split('\\n')) {
               if (line.startsWith('+') && line.includes('@')) {
-                  const version = split("@")[1].split('#')[0].trim();
+                  const version = line.split("@")[1].split('#')[0].trim();
 
                   // If version is SHA, then add comment //
                   if(version.length == 40) {
