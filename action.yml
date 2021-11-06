@@ -30,7 +30,7 @@ runs:
             ## Check if PR opened by Dependabot ##
             if (context.payload.sender.login == 'dependabot[bot]') {
               ## Check if Dependabot PR is for GitHub Actions ##
-              if (context.payload.pull_request.labels.includes('github-actions') {
+              if (context.payload.pull_request.labels.includes('github-actions')) {
                 core.info("Processing the Pull Request...")
                 return true;
               } else {
