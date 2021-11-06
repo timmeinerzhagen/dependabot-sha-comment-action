@@ -23,13 +23,13 @@ runs:
       id: check
       with:
         script: |
-          ## Check if correct event ##
+          // Check if correct event //
           if (context.eventName !== 'pull_request_target') {
             core.setFailed("This action can only be used with the 'pull_request_target' trigger.");
           } else {
-            ## Check if PR opened by Dependabot ##
+            // Check if PR opened by Dependabot //
             if (context.payload.sender.login == 'dependabot[bot]') {
-              ## Check if Dependabot PR is for GitHub Actions ##
+              // Check if Dependabot PR is for GitHub Actions //
               if (context.payload.pull_request.labels.includes('github-actions')) {
                 core.info("Processing the Pull Request...")
                 return true;
@@ -65,7 +65,7 @@ runs:
       if: steps.check.outputs.result
       with:
         script: |
-          ## Run js checking diff and adjusting version ##
+          // Run js checking diff and adjusting version //
           const script = require('./src/version-change.js')
           script({process, context, exec})
 
