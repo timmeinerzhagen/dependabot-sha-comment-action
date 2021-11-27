@@ -18,6 +18,25 @@ runs:
         ref: ${{ github.event.pull_request.head.ref }}
         token: ${{ inputs.GITHUB_TOKEN }}
 
+    - uses: dependabot/fetch-metadata@v1.1.1
+      id: dependabot-fetch-metadata
+      with:
+        github-token: ${{ inputs.GITHUB_TOKEN }}
+
+    - run: |
+        echo $NAMES
+        echo "-----""
+        echo $TYPES_DEPS
+        echo "-----""
+        echo $TYPES_UPDATE
+        echo "-----""
+        echo $JSON
+      env:
+        NAMES: ${{ steps.dependabot-metadata.outputs.dependency-names }}
+        TYPES_DEPS: ${{ steps.dependabot-metadata.outputs.dependency-type }}
+        TYPES_UPDATE: ${{ steps.dependabot-metadata.outputs.update-type }}
+        JSON: ${{ steps.dependabot-metadata.outputs.updated-dependencies-json }}
+
     - name: Check Pull Request Meta
       uses: actions/github-script@v5
       id: check
