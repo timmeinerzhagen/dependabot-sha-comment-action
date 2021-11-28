@@ -5,6 +5,10 @@ inputs:
   GITHUB_TOKEN:
     description: 'Github token of the repository with scopes repos and workflows'
     required: true
+  FORMAT_TAG:
+    description: 'Format version to tag format e.g. Version 5 to v5.0.0 (Dependabot formats tags to versions by default)'
+    required: false
+    default: false
 branding:
   icon: 'lock'  
   color: 'yellow'
@@ -59,9 +63,11 @@ runs:
       uses: actions/github-script@v5
       id: version-change
       if: steps.check.outputs.result
+      env:
+        FORMAT_TAG: ${{ inputs.FORMAT_TAG }}
       with:
         script: |
-          const {DIFF} = process.env;
+          const {DIFF, FORMAT_TAG} = process.env;
           const payload = context.payload;
 
           const titleparts = payload.pull_request.title.split('to')
@@ -89,8 +95,10 @@ runs:
                           },
                           cwd: './'
                       };
-
-                      version_formatted = 'v' + version_update + (version_update.length <= 1 ? '.0' : '') + (version_update.length <= 3 ? '.0' : '');
+                      if(FORMAT_TAG)
+                        version_formatted = 'v' + version_update + (version_update.length <= 1 ? '.0' : '') + (version_update.length <= 3 ? '.0' : '');
+                      else
+                        version_formatted = version_update;
 
                       // Calculate changes //
                       await exec.exec('cat ', [path], options);
