@@ -18,26 +18,6 @@ runs:
         ref: ${{ github.event.pull_request.head.ref }}
         token: ${{ inputs.GITHUB_TOKEN }}
 
-    - uses: dependabot/fetch-metadata@v1.1.1
-      id: dependabot-fetch-metadata
-      with:
-        github-token: ${{ inputs.GITHUB_TOKEN }}
-
-    - run: |
-        echo $NAMES
-        echo "-----""
-        echo $TYPES_DEPS
-        echo "-----""
-        echo $TYPES_UPDATE
-        echo "-----""
-        echo $JSON
-      shell: bash
-      env:
-        NAMES: ${{ steps.dependabot-metadata.outputs.dependency-names }}
-        TYPES_DEPS: ${{ steps.dependabot-metadata.outputs.dependency-type }}
-        TYPES_UPDATE: ${{ steps.dependabot-metadata.outputs.update-type }}
-        JSON: ${{ steps.dependabot-metadata.outputs.updated-dependencies-json }}
-
     - name: Check Pull Request Meta
       uses: actions/github-script@v5
       id: check
@@ -110,9 +90,11 @@ runs:
                           cwd: './'
                       };
 
+                      version_formatted = 'v' + version_update + (version_update.length <= 1 ? '.0' : '') + (version_update.length <= 3 ? '.0' : '');
+
                       // Calculate changes //
                       await exec.exec('cat ', [path], options);
-                      const newline = line.substring(1).split('#')[0].trim() + ' # ' + version_update + '\n';
+                      const newline = line.substring(1).split('#')[0].trim() + ' # ' + version_formatted + '\n';
 
                       // Save changes in file //
                       await exec.exec('sed -i \"s/' + line.substring(1).trim().replace(new RegExp("\/", 'g'), "\\/") + '/' + newline.trim().replace(new RegExp("\/", 'g'), "\\/") + '/g\" ' + path);
