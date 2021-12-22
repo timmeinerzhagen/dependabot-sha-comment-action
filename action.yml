@@ -73,41 +73,44 @@ runs:
           const titleparts = payload.pull_request.title.split('to')
           const version_update = titleparts[titleparts.length - 1].trim();
 
-          // Check if GitHub Actions file is changes //
-          const path = DIFF.split('\n')[0].split(' ')[2].substr(2);
-          if (!(path.startsWith('.github/workflows') && (path.endsWith('.yml') || path.endsWith('.yaml')))) {
-              core.info("Not a GitHub Actions Dependabot Pull Request.");
-              return;
-          }
+          for(const fileDiff pf DIFF.split('diff --git a/')){
 
-          // Look through DIFF for version change //
-          for(const line of DIFF.split('\\n')) {
-              if (line.startsWith('+') && line.includes('@')) {
-                  const version = line.split("@")[1].split('#')[0].trim();
+            // Check if GitHub Actions file is changes //
+            const path = fileDiff.split('\n')[0].split(' ')[0];
+            if (!(path.startsWith('.github/workflows') && (path.endsWith('.yml') || path.endsWith('.yaml')))) {
+                core.info("Not a GitHub Actions Dependabot Pull Request.");
+                return;
+            }
 
-                  // If version is SHA, then add comment //
-                  if(version.length == 40) {
-                      let output = '', error = '';
-                      const options = {
-                          listeners: { 
-                              stdout: (data) => { output += data.toString(); },
-                              stderr: (data) => { error += data.toString(); }
-                          },
-                          cwd: './'
-                      };
-                      if(FORMAT_TAG)
-                        version_formatted = 'v' + version_update + (version_update.length <= 1 ? '.0' : '') + (version_update.length <= 3 ? '.0' : '');
-                      else
-                        version_formatted = version_update;
+            // Look through DIFF for version change //
+            for(const line of fileDiff.split('\\n')) {
+                if (line.startsWith('+') && line.includes('@')) {
+                    const version = line.split("@")[1].split('#')[0].trim();
 
-                      // Calculate changes //
-                      await exec.exec('cat ', [path], options);
-                      const newline = line.substring(1).split('#')[0].trim() + ' # ' + version_formatted + '\n';
+                    // If version is SHA, then add comment //
+                    if(version.length == 40) {
+                        let output = '', error = '';
+                        const options = {
+                            listeners: { 
+                                stdout: (data) => { output += data.toString(); },
+                                stderr: (data) => { error += data.toString(); }
+                            },
+                            cwd: './'
+                        };
+                        if(FORMAT_TAG)
+                          version_formatted = 'v' + version_update + (version_update.length <= 1 ? '.0' : '') + (version_update.length <= 3 ? '.0' : '');
+                        else
+                          version_formatted = version_update;
 
-                      // Save changes in file //
-                      await exec.exec('sed -i \"s/' + line.substring(1).trim().replace(new RegExp("\/", 'g'), "\\/") + '/' + newline.trim().replace(new RegExp("\/", 'g'), "\\/") + '/g\" ' + path);
-                  }
-              }
+                        // Calculate changes //
+                        await exec.exec('cat ', [path], options);
+                        const newline = line.substring(1).split('#')[0].trim() + ' # ' + version_formatted + '\n';
+
+                        // Save changes in file //
+                        await exec.exec('sed -i \"s/' + line.substring(1).trim().replace(new RegExp("\/", 'g'), "\\/") + '/' + newline.trim().replace(new RegExp("\/", 'g'), "\\/") + '/g\" ' + path);
+                    }
+                }
+            }
           }
           return true;
 
