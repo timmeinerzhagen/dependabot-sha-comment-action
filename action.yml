@@ -74,7 +74,7 @@ runs:
           const version_update = titleparts[titleparts.length - 1].trim();
 
           // Check all changed files //
-          for(const fileDiff of DIFF.split('diff --git a/').forEach(async fileDiff => {
+          for(const fileDiff of DIFF.split('diff --git a/')){
 
             // Check if file is GitHub Actions file //
             const path = fileDiff.split('\n')[0].split(' ')[0];
@@ -84,7 +84,7 @@ runs:
             }
 
             // Look through DIFF for version change //
-            fileDiff.split('\\n').forEach(async line => {
+            for(const line of fileDiff.split('\\n')) {
               if (line.startsWith('+') && line.includes('@')) {
                 const version = line.split("@")[1].split('#')[0].trim();
 
