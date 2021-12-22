@@ -111,8 +111,8 @@ runs:
                   await exec.exec('sed -i \"s/' + line.substring(1).trim().replace(new RegExp("\/", 'g'), "\\/") + '/' + newline.trim().replace(new RegExp("\/", 'g'), "\\/") + '/g\" ' + path);
                 }
               }
-            });
-          });
+            }
+          }
           return true;
 
     - name: Push file changes
