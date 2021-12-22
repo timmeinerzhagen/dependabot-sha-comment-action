@@ -73,7 +73,7 @@ runs:
           const titleparts = payload.pull_request.title.split('to')
           const version_update = titleparts[titleparts.length - 1].trim();
 
-          for(const fileDiff pf DIFF.split('diff --git a/')){
+          for(const fileDiff of DIFF.split('diff --git a/')){
 
             // Check if GitHub Actions file is changes //
             const path = fileDiff.split('\n')[0].split(' ')[0];
