@@ -80,7 +80,7 @@ runs:
             const path = fileDiff.split('\n')[0].split(' ')[0];
             if (!(path.startsWith('.github/workflows') && (path.endsWith('.yml') || path.endsWith('.yaml')))) {
               core.info("Not a GitHub Actions Dependabot Pull Request.");
-              continue;
+              return;
             }
 
             // Look through DIFF for version change //
