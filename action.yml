@@ -73,46 +73,46 @@ runs:
           const titleparts = payload.pull_request.title.split('to')
           const version_update = titleparts[titleparts.length - 1].trim();
 
-          for(const fileDiff of DIFF.split('diff --git a/')){
+          // Check all changed files //
+          for(const fileDiff of DIFF.split('diff --git a/').forEach(fileDiff => {
 
-            // Check if GitHub Actions file is changes //
+            // Check if file is GitHub Actions file //
             const path = fileDiff.split('\n')[0].split(' ')[0];
-            console.log(path)
             if (!(path.startsWith('.github/workflows') && (path.endsWith('.yml') || path.endsWith('.yaml')))) {
-                core.info("Not a GitHub Actions Dependabot Pull Request.");
-                continue;
+              core.info("Not a GitHub Actions Dependabot Pull Request.");
+              continue;
             }
 
             // Look through DIFF for version change //
-            for(const line of fileDiff.split('\\n')) {
-                if (line.startsWith('+') && line.includes('@')) {
-                    const version = line.split("@")[1].split('#')[0].trim();
+            fileDiff.split('\\n').forEach(line => {
+              if (line.startsWith('+') && line.includes('@')) {
+                const version = line.split("@")[1].split('#')[0].trim();
 
-                    // If version is SHA, then add comment //
-                    if(version.length == 40) {
-                        let output = '', error = '';
-                        const options = {
-                            listeners: { 
-                                stdout: (data) => { output += data.toString(); },
-                                stderr: (data) => { error += data.toString(); }
-                            },
-                            cwd: './'
-                        };
-                        if(FORMAT_TAG)
-                          version_formatted = 'v' + version_update + (version_update.length <= 1 ? '.0' : '') + (version_update.length <= 3 ? '.0' : '');
-                        else
-                          version_formatted = version_update;
+                // If version is SHA, then add comment //
+                if(version.length == 40) {
+                  let output = '', error = '';
+                  const options = {
+                    listeners: { 
+                      stdout: (data) => { output += data.toString(); },
+                      stderr: (data) => { error += data.toString(); }
+                    },
+                    cwd: './'
+                  };
+                  if(FORMAT_TAG)
+                    version_formatted = 'v' + version_update + (version_update.length <= 1 ? '.0' : '') + (version_update.length <= 3 ? '.0' : '');
+                  else
+                    version_formatted = version_update;
 
-                        // Calculate changes //
-                        await exec.exec('cat ', [path], options);
-                        const newline = line.substring(1).split('#')[0].trim() + ' # ' + version_formatted + '\n';
+                  // Calculate changes //
+                  await exec.exec('cat ', [path], options);
+                  const newline = line.substring(1).split('#')[0].trim() + ' # ' + version_formatted + '\n';
 
-                        // Save changes in file //
-                        await exec.exec('sed -i \"s/' + line.substring(1).trim().replace(new RegExp("\/", 'g'), "\\/") + '/' + newline.trim().replace(new RegExp("\/", 'g'), "\\/") + '/g\" ' + path);
-                    }
+                  // Save changes in file //
+                  await exec.exec('sed -i \"s/' + line.substring(1).trim().replace(new RegExp("\/", 'g'), "\\/") + '/' + newline.trim().replace(new RegExp("\/", 'g'), "\\/") + '/g\" ' + path);
                 }
-            }
-          }
+              }
+            });
+          });
           return true;
 
     - name: Push file changes
