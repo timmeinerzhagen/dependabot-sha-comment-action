@@ -77,9 +77,10 @@ runs:
 
             // Check if GitHub Actions file is changes //
             const path = fileDiff.split('\n')[0].split(' ')[0];
+            console.log(path)
             if (!(path.startsWith('.github/workflows') && (path.endsWith('.yml') || path.endsWith('.yaml')))) {
                 core.info("Not a GitHub Actions Dependabot Pull Request.");
-                return;
+                continue;
             }
 
             // Look through DIFF for version change //
