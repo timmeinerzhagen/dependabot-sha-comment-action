@@ -4,7 +4,7 @@ author: timmeinerzhagen
 inputs: 
   GITHUB_TOKEN:
     description: 'Github token of the repository with scopes repos and workflows'
-    required: true
+    required: false
   FORMAT_TAG:
     description: 'Format version to tag format e.g. Version 5 to v5.0.0 (Dependabot formats tags to versions by default)'
     required: false
@@ -16,20 +16,14 @@ branding:
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v2
-      with:
-        repository: ${{ github.repository }}
-        ref: ${{ github.event.pull_request.head.ref }}
-        token: ${{ inputs.GITHUB_TOKEN }}
-
     - name: Check Pull Request Meta
       uses: actions/github-script@v5
       id: check
       with:
         script: |
           // Check if correct event //
-          if (context.eventName !== 'pull_request_target') {
-            core.setFailed("This action can only be used with the 'pull_request_target' trigger.");
+          if ( !(context.eventName == 'pull_request_target' || context.eventName == 'pull_request) ) {
+            core.setFailed("This action can only be used with the 'pull_request_target' or 'pull_request' trigger.");
           } else {
             // Check if PR opened by Dependabot //
             if (context.payload.sender.login == 'dependabot[bot]') {
@@ -38,7 +32,14 @@ runs:
             } else {
               core.info("Not a Dependabot Pull Request.");
             }
-          }
+          }          
+    
+    - uses: actions/checkout@v2
+      if: steps.check.outputs.result
+      with:
+        repository: ${{ github.repository }}
+        ref: ${{ github.event.pull_request.head.ref }}
+        token: ${{ inputs.GITHUB_TOKEN }}
 
     - name: Get Pull Request Diff
       shell: bash
