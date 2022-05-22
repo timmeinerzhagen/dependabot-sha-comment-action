@@ -28,7 +28,7 @@ jobs:
     steps:
       - uses: timmeinerzhagen/dependabot-sha-comment-action@main # insert current version
         with:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
 ```
 
 ## Security Disclaimer
@@ -41,7 +41,7 @@ In order to run this action you also need to provide a PAT. This is needed becau
 
 ## Inputs
 
-### GITHUB_TOKEN *required*
+### GH_TOKEN *required*
 
 A GitHub Personal Access Token (PAT) is required. 
 
