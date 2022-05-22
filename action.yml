@@ -28,7 +28,7 @@ runs:
       env:
         GH_TOKEN: ${{ inputs.GITHUB_TOKEN }}
       with:
-        token: ${{ github.token }}
+        github-token: ${{ github.token }}
         script: |
           // Check if correct event //
           if ( !(context.eventName == 'pull_request_target' || context.eventName == 'pull_request) ) {
