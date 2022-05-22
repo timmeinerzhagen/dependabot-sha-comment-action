@@ -28,10 +28,9 @@ runs:
       env:
         GH_TOKEN: ${{ inputs.GITHUB_TOKEN }}
       with:
-        github-token: ${{ github.token }}
         script: |
           // Check if correct event //
-          if ( !(context.eventName == 'pull_request_target' || context.eventName == 'pull_request) ) {
+          if ( !(context.eventName == 'pull_request_target' || context.eventName == 'pull_request') ) {
             core.setFailed("This action can only be used with the 'pull_request_target' or 'pull_request' trigger.");
           } else {
             // Check if PR opened by Dependabot //
