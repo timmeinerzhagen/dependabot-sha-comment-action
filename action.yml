@@ -30,8 +30,8 @@ runs:
       with:
         script: |
           // Check if correct event //
-          if ( !(context.eventName == 'pull_request_target' || context.eventName == 'pull_request') ) {
-            core.setFailed("This action can only be used with the 'pull_request_target' or 'pull_request' trigger.");
+          if (!context.eventName == 'pull_request') {
+            core.setFailed("This action can only be used with the 'pull_request' trigger.");
           } else {
             // Check if PR opened by Dependabot //
             if (context.payload.sender.login == 'dependabot[bot]') {
