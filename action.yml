@@ -15,10 +15,19 @@ branding:
 
 runs:
   using: "composite"
-  steps:
+  steps:    
+    - uses: actions/checkout@v2
+      if: steps.check.outputs.result
+      with:
+        repository: ${{ github.repository }}
+        ref: ${{ github.event.pull_request.head.ref }}
+        token: ${{ inputs.GITHUB_TOKEN || github.token }}
+        
     - name: Check Pull Request Meta
       uses: actions/github-script@v5
       id: check
+      env:
+        GH_TOKEN: ${{ inputs.GITHUB_TOKEN }}
       with:
         script: |
           // Check if correct event //
@@ -27,19 +36,16 @@ runs:
           } else {
             // Check if PR opened by Dependabot //
             if (context.payload.sender.login == 'dependabot[bot]') {
-              core.info("Processing the Pull Request...")
-              return true;
+              if(process.env.GH_TOKEN){
+                core.info("Processing the Pull Request...")
+                return true;
+              } else {
+                core.setFailed("The required parameter 'GITHUB_TOKEN' is not provided.");
+              }
             } else {
               core.info("Not a Dependabot Pull Request.");
             }
           }          
-    
-    - uses: actions/checkout@v2
-      if: steps.check.outputs.result
-      with:
-        repository: ${{ github.repository }}
-        ref: ${{ github.event.pull_request.head.ref }}
-        token: ${{ inputs.GITHUB_TOKEN }}
 
     - name: Get Pull Request Diff
       shell: bash
