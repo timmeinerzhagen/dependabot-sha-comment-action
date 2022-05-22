@@ -2,7 +2,7 @@ name: 'Dependabot SHA Comment Action'
 description: 'Update version comment for SHA pin of GitHub Actions on Dependabot update.'
 author: timmeinerzhagen
 inputs: 
-  GITHUB_TOKEN:
+  GH_TOKEN:
     description: 'Github token of the repository with scopes repos and workflows'
     required: false
   FORMAT_TAG:
@@ -20,18 +20,18 @@ runs:
       with:
         repository: ${{ github.repository }}
         ref: ${{ github.event.pull_request.head.ref }}
-        token: ${{ inputs.GITHUB_TOKEN || github.token }}
+        token: ${{ inputs.GH_TOKEN || github.token }}
         
     - name: Check Pull Request Meta
       uses: actions/github-script@v5
       id: check
       env:
-        GH_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ inputs.GH_TOKEN }}
       with:
         script: |
           // Check if correct event //
-          if ( !(context.eventName == 'pull_request_target' || context.eventName == 'pull_request) ) {
-            core.setFailed("This action can only be used with the 'pull_request_target' or 'pull_request' trigger.");
+          if (!context.eventName == 'pull_request') {
+            core.setFailed("This action can only be used with the 'pull_request' trigger.");
           } else {
             // Check if PR opened by Dependabot //
             if (context.payload.sender.login == 'dependabot[bot]') {
@@ -39,7 +39,7 @@ runs:
                 core.info("Processing the Pull Request...")
                 return true;
               } else {
-                core.setFailed("The required parameter 'GITHUB_TOKEN' is not provided.");
+                core.setFailed("The required parameter 'GH_TOKEN' is not provided.");
               }
             } else {
               core.info("Not a Dependabot Pull Request.");
