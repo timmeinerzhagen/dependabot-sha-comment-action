@@ -17,7 +17,6 @@ runs:
   using: "composite"
   steps:    
     - uses: actions/checkout@v2
-      if: steps.check.outputs.result
       with:
         repository: ${{ github.repository }}
         ref: ${{ github.event.pull_request.head.ref }}
