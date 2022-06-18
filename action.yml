@@ -34,7 +34,7 @@ runs:
             core.setFailed("This action can only be used with the 'pull_request' trigger.");
           } else {
             // Check if PR opened by Dependabot //
-            if (context.payload.sender.login == 'dependabot[bot]') {
+            if (context.pull_request.user.login == 'dependabot[bot]') {
               if(process.env.GH_TOKEN){
                 core.info("Processing the Pull Request...")
                 return true;
