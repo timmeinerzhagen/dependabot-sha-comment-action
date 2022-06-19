@@ -1,0 +1,46 @@
+{
+  "name": "dependabot-sha-comment-action",
+  "version": "2.0.0",
+  "description": "Update version comment for SHA pin of GitHub Actions on Dependabot update.",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "./build.js",
+    "lint": "eslint . --ext .ts",
+    "start": "npm run lint && npm run build && echo \"Run JS via Node\" && npm run exec",
+    "exec": "node -e \"require('./dist/index');\"",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/timmeinerzhagen/dependabot-sha-comment-action.git"
+  },
+  "keywords": [
+    "action",
+    "dependabot",
+    "dependency",
+    "security",
+    "versioning"
+  ],
+  "author": "timmeinerzhagen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/timmeinerzhagen/dependabot-sha-comment-action/issues"
+  },
+  "homepage": "https://github.com/timmeinerzhagen/dependabot-sha-comment-action#readme",
+  "devDependencies": {
+    "@types/jest": "^28.1.2",
+    "@types/node": "^18.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.28.0",
+    "@typescript-eslint/parser": "^5.28.0",
+    "esbuild": "^0.14.46",
+    "eslint": "^8.18.0",
+    "jest": "^28.1.1",
+    "ts-jest": "^28.0.5",
+    "typescript": "^4.7.4"
+  },
+  "dependencies": {
+    "@actions/core": "^1.9.0",
+    "@actions/exec": "^1.1.1",
+    "@actions/github": "^5.0.3"
+  }
+}
