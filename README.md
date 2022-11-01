@@ -1,3 +1,6 @@
+> :warning: **Implemented by GitHub** </br>
+> This Action is no longer needed, as [GitHub Dependabot added SHA Comment Version Updating](https://github.blog/changelog/2022-10-31-dependabot-now-updates-comments-in-github-actions-workflows-referencing-action-versions/) to its managed service. 
+
 # Dependabot SHA Comment Action
 
 Used with Dependabot and GitHub Actions pinned via SHA. It adds and maintains a version comment next to the SHA hash on every Dependabot update. 
